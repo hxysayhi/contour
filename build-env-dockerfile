@@ -1,0 +1,11 @@
+# Image for contour building and debuging
+# This image provides the dependencies required for compilation and the tools required for debugging
+# It is mainly for the situation that needs to be compiled and debugged in offline or local area network environment.
+
+FROM golang:1.18.0 AS build
+WORKDIR /contour
+
+ENV GOPROXY=https://goproxy.cn/
+COPY go.mod go.sum /contour/
+RUN go mod download
+RUN go install github.com/go-delve/delve/cmd/dlv@latest

@@ -74,6 +74,8 @@ GO_BUILD_VARS = \
 
 GO_TAGS := -tags "oidc gcp osusergo netgo"
 GO_LDFLAGS := -s -w $(patsubst %,-X %, $(GO_BUILD_VARS)) $(EXTRA_GO_LDFLAGS)
+GO_LDFLAGS_DEBUG := $(patsubst %,-X %, $(GO_BUILD_VARS)) $(EXTRA_GO_LDFLAGS)
+
 
 # Docker labels to be applied to the Contour image. We don't transform
 # this with make because it's not worth pulling the tricks needed to handle
@@ -102,6 +104,10 @@ checkall: check lint check-generate
 
 build: ## Build the contour binary
 	go build -mod=readonly -v -ldflags="$(GO_LDFLAGS)" $(GO_TAGS) $(MODULE)/cmd/contour
+
+build-debug: ## Build the contour binary
+	go build -gcflags "all=-N -l" -mod=readonly -v -ldflags="$(GO_LDFLAGS_DEBUG)" $(GO_TAGS) $(MODULE)/cmd/contour
+
 
 install: ## Build and install the contour binary
 	go install -mod=readonly -v -ldflags="$(GO_LDFLAGS)" $(GO_TAGS) $(MODULE)/cmd/contour
